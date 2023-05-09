@@ -1,14 +1,13 @@
 import com.mongodb.client.MongoDatabase;
 import com.sun.net.httpserver.HttpServer;
 import dto.UserDto;
+import dto.Utility;
 import model.UserRecord;
-import org.bson.Document;
 import rest.RootHttpHandler;
 import rest.UserHttpHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 public class Demo {
@@ -17,9 +16,10 @@ public class Demo {
        appInit.init();
        MongoDatabase db = appInit.getMongoDatabase();
        UserDto userDto = new UserDto(db);
+       Utility dtoUtility = new Utility();
+       httpserver.Utility httpUtility = new httpserver.Utility();
        userDto.deleteAll();
        UserRecord user = userDto.create(new UserRecord("Vlas", "Dielov"));
-       List<Document> users = userDto.getAll();
        System.out.println("One of user: " + user.toJSON());
        user.setFirstName("Vlass");
        user = userDto.update(user);
@@ -42,7 +42,7 @@ public class Demo {
 //           }
 //       });
        server.createContext("/", new RootHttpHandler());
-       server.createContext("/users", new UserHttpHandler(userDto));
+       server.createContext("/users", new UserHttpHandler(userDto, dtoUtility, httpUtility));
        server.start();
 //       Thread.sleep(10000);
    }

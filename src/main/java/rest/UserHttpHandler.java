@@ -3,15 +3,19 @@ package rest;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import dto.UserDto;
-import org.bson.Document;
+import dto.Utility;
+import model.SerialasableToJSON;
 
 import java.io.IOException;
-import java.util.List;
 
 public class UserHttpHandler implements HttpHandler {
     final UserDto userDto;
-    public UserHttpHandler(UserDto userDto) {
+    final Utility utility;
+    final httpserver.Utility httpUtility;
+    public UserHttpHandler(UserDto userDto, Utility utility, httpserver.Utility httpUtility) {
         this.userDto = userDto;
+        this.utility = utility;
+        this.httpUtility = httpUtility;
     }
     @Override
     public void handle(HttpExchange exchange) {
@@ -23,6 +27,12 @@ public class UserHttpHandler implements HttpHandler {
     }
 
     public void get(HttpExchange exchange) {
-        List<Document> toReturn = this.userDto.getAll();
+       String toReturn = this.utility.serializeListToJsonArray(
+               this.userDto.getAll().stream().map((item) -> (SerialasableToJSON) item).toList());
+       try {
+           this.httpUtility.finishWithSuccess(toReturn, exchange);
+       } catch (IOException e) {
+           this.httpUtility.finishWithServerError("Could not write a response", exchange);
+       }
     }
 }

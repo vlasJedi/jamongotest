@@ -7,6 +7,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class UserDto {
@@ -19,10 +20,11 @@ public class UserDto {
         this.userCollection = this.db.getCollection("user");
     }
 
-    public List<Document> getAll() {
+    public List<UserRecord> getAll() {
         return StreamSupport
                 .stream(this.userCollection.find().spliterator(), false)
-                .toList();
+                .map(UserRecord::new)
+                .collect(Collectors.toList());
     }
 
     public UserRecord create(UserRecord user) {

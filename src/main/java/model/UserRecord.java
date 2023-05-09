@@ -3,7 +3,7 @@ package model;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-public class UserRecord {
+public class UserRecord implements SerialasableToJSON {
     private String id;
     private String firstName;
     private String secondName;
