@@ -3,8 +3,10 @@ import com.sun.net.httpserver.HttpServer;
 import dto.UserDto;
 import dto.Utility;
 import model.UserRecord;
+import org.bson.Document;
 import rest.RootHttpHandler;
 import rest.UserHttpHandler;
+import util.Utils;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -22,9 +24,16 @@ public class Demo {
        UserRecord user = userDto.create(new UserRecord("Vlas", "Dielov"));
        System.out.println("One of user: " + user.toJSON());
        user.setFirstName("Vlass");
-       user = userDto.update(user);
+       System.out.println("User id before replaceOne: " + user.getId());
+       user = userDto.replace(user);
+       user = userDto.get(user.getId());
+       System.out.println("One of user after replaceOne: " + user.toJSON());
+       Document upd = new Document().append("firstName", "Vlas");
+       userDto.update(user.getId(), new Document("$set", upd));
+       user = userDto.get(user.getId());
        System.out.println("One of user after update: " + user.toJSON());
        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
        // real 4 threads will try to handle load
        server.setExecutor(Executors.newFixedThreadPool(4));
 //       server.setExecutor(new Executor() {
@@ -41,8 +50,8 @@ public class Demo {
 //               command.run();
 //           }
 //       });
-       server.createContext("/", new RootHttpHandler());
-       server.createContext("/users", new UserHttpHandler(userDto, dtoUtility, httpUtility));
+       server.createContext("/", new RootHttpHandler(new Utils(), httpUtility));
+       server.createContext("/api/users", new UserHttpHandler(userDto, dtoUtility, httpUtility));
        server.start();
 //       Thread.sleep(10000);
    }

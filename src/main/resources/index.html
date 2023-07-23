@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing</title>
+</head>
+<body>
+<button class="refresh-users">Refresh users</button>
+<div class="users-list">
+
+</div>
+</body>
+<script>
+    (function () {
+        const refreshUsersDiv = document.getElementsByClassName("refresh-users")[0];
+        const usersList = document.getElementsByClassName("users-list")[0];
+        refreshUsersDiv.addEventListener("click", () => {
+           fetch("api/users").then((res) => res.json()).then(json => {
+               usersList.textContent = JSON.stringify(json);
+           });
+        });
+    }) ();
+</script>
+</html>
