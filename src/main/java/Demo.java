@@ -34,6 +34,49 @@ public class Demo {
        System.out.println("One of user after update: " + user.toJSON());
        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
+
+
+//       public static void main(String[] args) {
+//           MongoClient client = new MongoClient();
+//           MongoDatabase db = client.getDatabase("testdb");
+//           MongoCollection<Document> collection = db.getCollection("user");
+//           printCollection(collection);
+//
+//           Document userDoc = new Document().append("firstName", "Vlas").append("secondName", "Dielov");
+//           System.out.println(userDoc);
+//           collection.insertOne(userDoc);
+//           System.out.println(userDoc);
+//
+//           Document userCheck = collection.find(Filters.eq("_id", new ObjectId(userDoc.getString("_id")))).first();
+//       }
+//
+//       public static void printCollection(MongoCollection<Document> collection) {
+//           StreamSupport.stream(collection.find().spliterator(), false).toList().forEach(System.out::println);
+//       }
+//       public UserRecord create(UserRecord user) {
+//           Document doc = user.toDocument();
+//           this.userCollection.insertOne(doc);
+//           String id = doc.getObjectId("_id").toHexString();
+//           user.setId(id);
+//           return user;
+//       }
+//
+//       public UserRecord replace(UserRecord user) {
+//           Document doc = user.toDocument();
+//           // mongodb does not like to change object id
+//           UpdateResult res = this.userCollection.replaceOne(new Document("_id", new ObjectId(user.getId())), doc);
+//           return res.wasAcknowledged() ? user : null;
+//       }
+//
+//       public boolean update(String id, Document doc) {
+//           // mongodb does not like to change object id
+//           return this.userCollection.updateOne(new Document("_id", new ObjectId(id)), doc).wasAcknowledged();
+//       }
+//
+//       public void deleteAll() {
+//           this.userCollection.deleteMany(new Document());
+//       }
+
        // real 4 threads will try to handle load
        server.setExecutor(Executors.newFixedThreadPool(4));
 //       server.setExecutor(new Executor() {

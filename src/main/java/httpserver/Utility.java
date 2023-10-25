@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class Utility {
@@ -21,7 +20,6 @@ public class Utility {
     public void finishWithSuccessBuffered(InputStream is, HttpExchange exchange) throws IOException {
         OutputStream out = exchange.getResponseBody();
         byte[] buffer = new byte[0xFFF];
-        long totalSize = 0;
         // intentionally using chunked transfer
         exchange.sendResponseHeaders(200, 0);
         while(is.available() > 0) {
@@ -29,7 +27,6 @@ public class Utility {
             if (res > 0) {
                 out.write(buffer);
                 System.out.println(new String(buffer, StandardCharsets.UTF_8));
-                totalSize += res;
             }
         }
         out.flush();
