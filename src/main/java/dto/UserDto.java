@@ -3,6 +3,7 @@ package dto;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.result.UpdateResult;
 import model.UserRecord;
 import org.bson.Document;
@@ -20,6 +21,9 @@ public class UserDto {
     public UserDto(MongoDatabase db) {
         this.db = db;
         this.userCollection = this.db.getCollection("user");
+        IndexOptions opts = new IndexOptions();
+        opts.unique(true);
+        userCollection.createIndex(new Document("secondName", 1), opts);
     }
 
     public List<UserRecord> getAll() {

@@ -20,6 +20,7 @@ public class Demo {
        UserDto userDto = new UserDto(db);
        Utility dtoUtility = new Utility();
        httpserver.Utility httpUtility = new httpserver.Utility();
+       // CLEANUP ON START
        userDto.deleteAll();
        UserRecord user = userDto.create(new UserRecord("Vlas", "Dielov"));
        System.out.println("One of user: " + user.toJSON());
@@ -32,6 +33,11 @@ public class Demo {
        userDto.update(user.getId(), new Document("$set", upd));
        user = userDto.get(user.getId());
        System.out.println("One of user after update: " + user.toJSON());
+       try {
+           user = userDto.create(new UserRecord("Duplicated second nane", "Dielov"));
+       } catch (Exception e) {
+           System.out.println("Catched exception when saving duplicated second name: " + e.getMessage());
+       }
        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
 
